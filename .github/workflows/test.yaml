@@ -1,0 +1,52 @@
+name: Test MinIO Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the code
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Python 3.10
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.10
+
+    # Step 3: Load environment variables from resources/local.env
+    - name: Load environment variables
+      run: |
+        set -a
+        source resources/local.env
+        set +a
+
+    # Step 4: Set up Docker
+    - name: Run MinIO Docker container
+      run: |
+        docker run -d \
+          -p 9000:9000 \
+          -e "MINIO_ACCESS_KEY=admin" \
+          -e "MINIO_SECRET_KEY=password" \
+          --name minio \
+          minio/minio server /data
+
+    # Step 5: Install the current package
+    - name: Install package using pip
+      run: |
+        pip install .
+
+    # Step 6: Run Python tests
+    - name: Run Python tests
+      run: |
+        python tests/test.py
+

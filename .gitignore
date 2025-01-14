@@ -1,5 +1,5 @@
 deployment/minio/secret.yaml
 deployment/minio/passwords.txt
 .idea/
-resources/env
+resources/cluster.env
 __pycache__

@@ -13,7 +13,7 @@ _settings = {
     "uri": os.environ.get("MINIO_URI", "localhost:9000"),
     "user": os.environ.get("MINIO_ROOT_USER", None),
     "password": os.environ.get("MINIO_ROOT_PASSWORD", None),
-    "bucket": os.environ.get("MINIO_BUCKET", "our_bucket")
+    "bucket": os.environ.get("MINIO_BUCKET", "test-bucket")
 }
 
 _client = Minio(
@@ -37,12 +37,15 @@ def create_bucket_if_does_not_exist(bucket_name=_settings["bucket"]):
     -------
     None
     """
-    if not _client.bucket_exists(bucket_name):
-        _client.make_bucket(bucket_name)
-        logger.info(f"Bucket '{bucket_name}' created.")
-    else:
-        logger.info(f"Bucket '{bucket_name}' already exists.")
-
+    try:
+        if not _client.bucket_exists(bucket_name):
+            _client.make_bucket(bucket_name)
+            logger.info(f"Bucket '{bucket_name}' created.")
+        else:
+            logger.info(f"Bucket '{bucket_name}' already exists.")
+    except S3Error as err:
+        logger.error(f"Error to create bucket {bucket_name}: {err}")
+        raise err
 
 def put(local_file_path, bucket_name=_settings["bucket"]):
     """
@@ -92,5 +95,3 @@ def get(file_id, output_file, bucket_name=_settings["bucket"]):
         logger.info(f"'{file_id}' downloaded from bucket '{bucket_name}' into '{output_file}'.")
     except S3Error as err:
         logger.error(f"Error occurred while downloading: {err}")
-
-print()
