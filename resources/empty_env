@@ -1,0 +1,4 @@
+export MINIO_URI=
+export MINIO_ROOT_USER=
+export MINIO_ROOT_PASSWORD=
+export MINIO_BUCKET=test_bucket

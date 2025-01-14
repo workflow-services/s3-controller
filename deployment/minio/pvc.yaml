@@ -1,0 +1,1 @@
+# There is no PVC file. See the statefulset yaml file for the volume claim template

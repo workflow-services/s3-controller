@@ -1,0 +1,19 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: minio-web-allow-external
+spec:
+  selector:
+    matchLabels:
+      app: minio
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - minio          
+  ingress:
+    - {}
+  policyTypes:
+    - Ingress
+
