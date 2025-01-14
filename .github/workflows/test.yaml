@@ -21,14 +21,6 @@ jobs:
         python-version: "3.12"
         cache: "pip"
 
-    # Step 3: Load environment variables from resources/local.env
-    - name: Load environment variables
-      run: |
-        set -a
-        source resources/local.env
-        set +a
-
-    # Step 4: Set up Docker
     - name: Run MinIO Docker container
       run: |
         docker run -d \
@@ -38,14 +30,12 @@ jobs:
           --name minio \
           minio/minio server /data
 
-    # Step 5: Install the current package
     - name: Install package using pip
       run: |
         pip install --upgrade pip
         pip install .
 
-    # Step 6: Run Python tests
     - name: Run Python tests
       run: |
+        source resources/local.env
         python tests/test.py
-
