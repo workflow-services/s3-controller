@@ -13,15 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Check out the code
-    - name: Check out code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    # Step 2: Set up Python 3.10
-    - name: Set up Python 3.10
+    - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
-        python-version: 3.10
+        python-version: "3.12"
+        cache: "pip"
 
     # Step 3: Load environment variables from resources/local.env
     - name: Load environment variables
@@ -43,6 +41,7 @@ jobs:
     # Step 5: Install the current package
     - name: Install package using pip
       run: |
+        pip install --upgrade pip
         pip install .
 
     # Step 6: Run Python tests
